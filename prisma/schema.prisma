@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // o "mysql" o "sqlite" según tu base de datos
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  password String
+  role     Role     @default(STAFF)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name     String?
+
+
+  rentals  Rental[]
+  sales    Sale[]
+}
+
+model Dress {
+  id          String   @id @default(uuid())
+  name        String
+  size        String   // S, M, L, XL, etc.
+  color       String
+  status      DressStatus @default(DISPONIBLE)
+  price       Float
+  rentalPrice Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rentals     Rental[]
+  sales       Sale[]
+}
+
+model Rental {
+  id         String   @id @default(uuid())
+  dressId    String
+  userId     String
+  clientName String
+  startDate  DateTime
+  endDate    DateTime
+  price      Float
+  createdAt  DateTime @default(now())
+
+  dress      Dress    @relation(fields: [dressId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Sale {
+  id         String   @id @default(uuid())
+  dressId    String
+  userId     String
+  clientName String
+  date       DateTime @default(now())
+  price      Float
+
+  dress      Dress    @relation(fields: [dressId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum DressStatus {
+  DISPONIBLE
+  RENTADO
+  VENDIDO
+}
