@@ -9,7 +9,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Obtiene el secreto JWT desde las variables de configuración
     const jwtSecret = config.get<string>('JWT_SECRET');
     if (!jwtSecret) {
-      // Lanza un error si el secreto no está definido
       throw new Error('JWT_SECRET is not defined in the configuration');
     }
 
@@ -28,7 +27,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @returns El payload del token si es válido.
    */
   async validate(payload: { sub: string; email: string; role: string }) {
-    // Retorna el payload del token, que contiene información del usuario
     return payload;
   }
 }

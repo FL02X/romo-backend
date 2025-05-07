@@ -1,15 +1,13 @@
-// Importa los decoradores y servicios necesarios
-import { Injectable, UnauthorizedException } from '@nestjs/common'; // Decoradores y excepciones de NestJS
-import { JwtService } from '@nestjs/jwt'; // Servicio para generar y verificar tokens JWT
-import { PrismaService } from '../prisma/prisma.service'; // Servicio para interactuar con la base de datos usando Prisma
-import * as bcrypt from 'bcrypt'; // Librería para manejar el hashing de contraseñas
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '../prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
-// Marca esta clase como un servicio inyectable
 @Injectable()
 export class AuthService {
   constructor(
-    private prisma: PrismaService, // Servicio de Prisma para interactuar con la base de datos
-    private jwtService: JwtService, // Servicio de JWT para manejar tokens
+    private prisma: PrismaService,
+    private jwtService: JwtService,
   ) {}
 
   /**
@@ -20,30 +18,21 @@ export class AuthService {
    * @throws UnauthorizedException si las credenciales no son válidas.
    */
   async validateUser(email: string, password: string) {
-    console.log('🔍 Validando usuario:', email);
-    // Busca al usuario en la base de datos por su correo electrónico
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
-
-    console.log('Usuario encontrado:', user);
-    // Si el usuario no existe, lanza una excepción
     if (!user) {
-      console.log('❌ Usuario no encontrado');
       throw new UnauthorizedException('Usuario no encontrado');
     }
 
     console.log('✅ Usuario encontrado:', user.email);
-    // Compara la contraseña proporcionada con la almacenada en la base de datos
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log('🔐 Comparación de contraseñas:', isPasswordValid);
 
     if (!isPasswordValid) {
       console.log('❌ Contraseña incorrecta');
       throw new UnauthorizedException('Contraseña incorrecta');
     }
 
-    // Si las credenciales son válidas, devuelve el objeto del usuario
     console.log('🎉 Usuario autenticado correctamente');
     return user;
   }

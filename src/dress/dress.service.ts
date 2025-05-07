@@ -1,13 +1,10 @@
-// Importa los decoradores y servicios necesarios
-import { Injectable } from '@nestjs/common'; // Marca la clase como un servicio inyectable en NestJS
-import { PrismaService } from '../prisma/prisma.service'; // Servicio para interactuar con la base de datos usando Prisma
-import { CreateDressDto } from './dto/create-dress.dto'; // DTO para validar los datos al crear un vestido
-import { UpdateDressDto } from './dto/update-dress.dto'; // DTO para validar los datos al actualizar un vestido
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateDressDto } from './dto/create-dress.dto';
+import { UpdateDressDto } from './dto/update-dress.dto';
 
-// Marca esta clase como un servicio inyectable
 @Injectable()
 export class DressService {
-  // Inyecta el servicio de Prisma para interactuar con la base de datos
   constructor(private prisma: PrismaService) {}
 
   /**
@@ -16,7 +13,7 @@ export class DressService {
    * @returns El registro del vestido creado.
    */
   create(data: CreateDressDto) {
-    return this.prisma.dress.create({ data }); // Usa Prisma para insertar un nuevo registro
+    return this.prisma.dress.create({ data });
   }
 
   /**
@@ -24,7 +21,7 @@ export class DressService {
    * @returns Una lista de todos los vestidos.
    */
   findAll() {
-    return this.prisma.dress.findMany(); // Usa Prisma para obtener todos los registros
+    return this.prisma.dress.findMany();
   }
 
   /**
@@ -33,7 +30,7 @@ export class DressService {
    * @returns El registro del vestido si existe, o null si no se encuentra.
    */
   findOne(id: string) {
-    return this.prisma.dress.findUnique({ where: { id } }); // Busca un registro único por su ID
+    return this.prisma.dress.findUnique({ where: { id } });
   }
 
   /**
@@ -55,6 +52,6 @@ export class DressService {
    * @returns El registro del vestido eliminado.
    */
   remove(id: string) {
-    return this.prisma.dress.delete({ where: { id } }); // Elimina el registro por su ID
+    return this.prisma.dress.delete({ where: { id } });
   }
 }

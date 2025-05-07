@@ -1,12 +1,10 @@
-// Importa los decoradores y servicios necesarios
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'; // Interfaz y decoradores para implementar guards
-import { Reflector } from '@nestjs/core'; // Servicio para acceder a metadatos personalizados
-import { ROLES_KEY } from '../decorators/roles.decorator'; // Clave para acceder a los roles definidos en los decoradores
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { ROLES_KEY } from '../decorators/roles.decorator';
 
-// Marca esta clase como un guard inyectable
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {} // Inyecta el servicio Reflector para leer metadatos
+  constructor(private reflector: Reflector) {} // Reflector para leer metadata
 
   /**
    * Método principal del guard que determina si una solicitud puede continuar.
@@ -16,8 +14,8 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     // Obtiene los roles requeridos desde los metadatos del controlador o del manejador
     const requiredRoles = this.reflector.getAllAndMerge<string[]>(ROLES_KEY, [
-      context.getHandler(), // Lee los metadatos del método manejador
-      context.getClass(), // Lee los metadatos de la clase del controlador
+      context.getHandler(),
+      context.getClass(),
     ]);
 
     // Si no hay roles requeridos, permite el acceso
@@ -25,7 +23,6 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    // Obtiene el usuario de la solicitud actual
     const { user } = context.switchToHttp().getRequest();
     console.log('Rol del usuario en RolesGuard:', user?.role);
     console.log('Roles requeridos:', requiredRoles);

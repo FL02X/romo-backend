@@ -1,20 +1,18 @@
-// Importa los decoradores y servicios necesarios
 import {
   CanActivate, // Interfaz para implementar guards personalizados
-  ExecutionContext, // Contexto de ejecución para acceder a la solicitud actual
-  Injectable, // Marca la clase como inyectable en NestJS
-  UnauthorizedException, // Excepción para manejar accesos no autorizados
+  ExecutionContext, // Acceder a la solicitud actual
+  Injectable, // Inyectable en NestJS
+  UnauthorizedException, // Accesos no autorizados
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt'; // Servicio para manejar tokens JWT
-import { Reflector } from '@nestjs/core'; // Servicio para acceder a metadatos personalizados
-import { Request } from 'express'; // Tipo para representar solicitudes HTTP
+import { JwtService } from '@nestjs/jwt'; // tokens JWT
+import { Reflector } from '@nestjs/core'; // metadata personalizados
+import { Request } from 'express'; // solicitudes HTTP
 
-// Marca esta clase como un guard inyectable
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService, // Servicio para verificar tokens JWT
-    private reflector: Reflector, // Servicio para leer metadatos personalizados
+    private jwtService: JwtService, // servicio para verificar tokens JWT
+    private reflector: Reflector, // servicio para leer metadata personalizados
   ) {}
 
   /**
@@ -25,11 +23,10 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Obtiene la solicitud HTTP actual
     const request = context.switchToHttp().getRequest<Request>();
-    const authHeader = request.headers.authorization; // Obtiene el encabezado de autorización
+    const authHeader = request.headers.authorization; // Obtiene el encabezado
 
-    // Si no hay un encabezado de autorización, lanza una excepción
     if (!authHeader) {
-      throw new UnauthorizedException('No token provided'); // Error 401: No se proporcionó un token
+      throw new UnauthorizedException('No token provided');
     }
 
     // Divide el encabezado de autorización para obtener el token (formato: "Bearer <token>")
@@ -46,8 +43,7 @@ export class AuthGuard implements CanActivate {
       // Si el token es válido, permite que la solicitud continúe
       return true;
     } catch (e) {
-      // Si el token no es válido, lanza una excepción
-      throw new UnauthorizedException('Invalid token'); // Error 401: Token inválido
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }

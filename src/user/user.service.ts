@@ -1,13 +1,11 @@
-// Importa los decoradores y servicios necesarios
-import { Injectable, NotFoundException } from '@nestjs/common'; // Decoradores y excepciones de NestJS
-import { PrismaService } from '../prisma/prisma.service'; // Servicio para interactuar con la base de datos usando Prisma
-import { Role } from '@prisma/client'; // Enum para los roles definidos en el esquema de Prisma
-import * as bcrypt from 'bcrypt'; // Librería para manejar el hashing de contraseñas
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { Role } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
-// Marca esta clase como un servicio inyectable
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {} // Inyecta el servicio Prisma para interactuar con la base de datos
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Recupera todos los usuarios de la base de datos.

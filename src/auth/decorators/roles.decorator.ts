@@ -1,7 +1,5 @@
-// Importa el decorador SetMetadata de NestJS
 import { SetMetadata } from '@nestjs/common';
 
-// Define una clave constante para los metadatos de roles
 export const ROLES_KEY = 'roles'; // Clave que se usará para almacenar los roles requeridos en los metadatos
 
 /**

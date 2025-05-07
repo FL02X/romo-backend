@@ -1,4 +1,3 @@
-// Importa los decoradores y servicios necesarios
 import {
   Controller,
   Get,
@@ -10,27 +9,26 @@ import {
   HttpCode,
   ParseUUIDPipe,
   UseGuards,
-} from '@nestjs/common'; // Decoradores para definir rutas y manejar solicitudes HTTP
-import { UserService } from './user.service'; // Servicio que contiene la lógica de negocio para los usuarios
-import { Role } from '@prisma/client'; // Enum para los roles definidos en el esquema de Prisma
+} from '@nestjs/common';
+import { UserService } from './user.service';
+import { Role } from '@prisma/client';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 
-// Define el controlador para manejar las rutas relacionadas con los usuarios
-@Controller('users') // Todas las rutas de este controlador estarán bajo el prefijo '/users'
-@UseGuards(AuthGuard, RolesGuard) // Aplica el guardia de roles para proteger las rutas
+@Controller('users') // '/users'
+@UseGuards(AuthGuard, RolesGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) {} // Inyecta el servicio UserService para manejar la lógica de negocio
+  constructor(private readonly userService: UserService) {}
 
   /**
    * Recupera todos los usuarios.
    * @returns Una lista de usuarios con campos seleccionados.
    */
-  @Get() // Define que este método maneja solicitudes GET en '/users'
+  @Get() // '/users'
   @Roles('ADMIN', 'STAFF')
   findAll() {
-    return this.userService.findAll(); // Llama al servicio para obtener todos los usuarios
+    return this.userService.findAll();
   }
 
   /**
@@ -38,10 +36,10 @@ export class UserController {
    * @param id - El identificador único del usuario.
    * @returns El registro del usuario si existe.
    */
-  @Get(':id') // Define que este método maneja solicitudes GET en '/users/:id'
+  @Get(':id') // '/users/:id'
   @Roles('ADMIN')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.userService.findOne(id); // Llama al servicio para buscar un usuario por su ID
+    return this.userService.findOne(id);
   }
 
   /**
@@ -49,8 +47,8 @@ export class UserController {
    * @param body - Objeto que contiene los datos del usuario.
    * @returns El registro del usuario creado.
    */
-  @Post() // Define que este método maneja solicitudes POST en '/users'
-  @HttpCode(201) // Establece el código de respuesta HTTP a 201 (Created)
+  @Post() // '/users'
+  @HttpCode(201)
   @Roles('ADMIN')
   create(
     @Body()
@@ -61,7 +59,7 @@ export class UserController {
       role: Role; // Rol del usuario (Role.ADMIN | Role.EMPLOYEE)
     },
   ) {
-    return this.userService.create(body); // Llama al servicio para crear un usuario
+    return this.userService.create(body);
   }
 
   /**
@@ -70,10 +68,10 @@ export class UserController {
    * @param body - Objeto con los datos a actualizar.
    * @returns El registro del usuario actualizado.
    */
-  @Patch(':id') // Define que este método maneja solicitudes PATCH en '/users/:id'
+  @Patch(':id') // '/users/:id'
   @Roles('ADMIN')
   update(
-    @Param('id', new ParseUUIDPipe()) id: string, // Valida que el ID sea un UUID válido
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body()
     body: Partial<{
       email: string; // Correo electrónico del usuario
@@ -82,7 +80,7 @@ export class UserController {
       role: Role; // Rol del usuario
     }>,
   ) {
-    return this.userService.update(id, body); // Llama al servicio para actualizar un usuario
+    return this.userService.update(id, body);
   }
 
   /**
@@ -90,9 +88,9 @@ export class UserController {
    * @param id - El identificador único del usuario.
    * @returns El registro del usuario eliminado.
    */
-  @Delete(':id') // Define que este método maneja solicitudes DELETE en '/users/:id'
+  @Delete(':id') // '/users/:id'
   @Roles('ADMIN')
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    return this.userService.remove(id); // Llama al servicio para eliminar un usuario
+    return this.userService.remove(id);
   }
 }

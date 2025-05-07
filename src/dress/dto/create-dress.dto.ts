@@ -8,6 +8,7 @@ import { DressStatus } from '@prisma/client';
         "color": "Rojo",
         "price": 1200,
         "rentalPrice": 300
+        "status": "DISPONIBLE" || "RENTADO" || "VENDIDO"
     }
 */
 

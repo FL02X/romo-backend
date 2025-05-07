@@ -1,13 +1,10 @@
-// Importa los decoradores y servicios necesarios
-import { Injectable, NotFoundException } from '@nestjs/common'; // Decoradores y excepciones de NestJS
-import { PrismaService } from '../prisma/prisma.service'; // Servicio para interactuar con la base de datos usando Prisma
-import { CreateRentalDto } from './dto/create-rental.dto'; // DTO para validar los datos al crear una renta
-import { UpdateRentalDto } from './dto/update-rental.dto'; // DTO para validar los datos al actualizar una renta
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateRentalDto } from './dto/create-rental.dto';
+import { UpdateRentalDto } from './dto/update-rental.dto';
 
-// Marca esta clase como un servicio inyectable
 @Injectable()
 export class RentalService {
-  // Inyecta el servicio de Prisma para interactuar con la base de datos
   constructor(private prisma: PrismaService) {}
 
   /**
@@ -16,7 +13,7 @@ export class RentalService {
    * @returns El registro de la renta creada.
    */
   create(data: CreateRentalDto) {
-    return this.prisma.rental.create({ data }); // Usa Prisma para insertar un nuevo registro
+    return this.prisma.rental.create({ data });
   }
 
   /**
@@ -39,8 +36,8 @@ export class RentalService {
    */
   findOne(id: string) {
     return this.prisma.rental.findUnique({
-      where: { id }, // Busca la renta por su ID
-      include: { dress: true, user: true }, // Incluye información del vestido y del usuario
+      where: { id },
+      include: { dress: true, user: true },
     });
   }
 
@@ -52,9 +49,9 @@ export class RentalService {
    * @throws NotFoundException si la renta no existe.
    */
   async update(id: string, data: UpdateRentalDto) {
-    const exists = await this.prisma.rental.findUnique({ where: { id } }); // Verifica si la renta existe
-    if (!exists) throw new NotFoundException('Renta no encontrada'); // Lanza una excepción si no existe
-    return this.prisma.rental.update({ where: { id }, data }); // Actualiza el registro
+    const exists = await this.prisma.rental.findUnique({ where: { id } });
+    if (!exists) throw new NotFoundException('Renta no encontrada');
+    return this.prisma.rental.update({ where: { id }, data });
   }
 
   /**
@@ -64,8 +61,8 @@ export class RentalService {
    * @throws NotFoundException si la renta no existe.
    */
   async remove(id: string) {
-    const exists = await this.prisma.rental.findUnique({ where: { id } }); // Verifica si la renta existe
-    if (!exists) throw new NotFoundException('Renta no encontrada'); // Lanza una excepción si no existe
-    return this.prisma.rental.delete({ where: { id } }); // Elimina el registro
+    const exists = await this.prisma.rental.findUnique({ where: { id } });
+    if (!exists) throw new NotFoundException('Renta no encontrada');
+    return this.prisma.rental.delete({ where: { id } });
   }
 }

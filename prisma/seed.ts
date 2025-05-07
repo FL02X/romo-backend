@@ -5,14 +5,13 @@ import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Hashear contraseñas
   const passwordAdmin = await bcrypt.hash('admin', 10);
-  const passwordStaff = await bcrypt.hash('empleado', 10);
+  const passwordStaff = await bcrypt.hash('staff', 10);
 
   // Crear usuarios
   const admin = await prisma.user.create({
     data: {
-      email: 'admin@tienda.com',
+      email: 'admin',
       password: passwordAdmin,
       role: Role.ADMIN,
     },
@@ -20,7 +19,7 @@ async function main() {
 
   const staff = await prisma.user.create({
     data: {
-      email: 'empleado@tienda.com',
+      email: 'staff',
       password: passwordStaff,
       role: Role.STAFF,
     },
@@ -46,7 +45,6 @@ async function main() {
     ),
   );
 
-  // Separar por estado
   const disponibles = dresses.filter((d) => d.status === 'DISPONIBLE');
   const rentados = dresses.filter((d) => d.status === 'RENTADO');
   const vendidos = dresses.filter((d) => d.status === 'VENDIDO');
@@ -103,7 +101,7 @@ async function main() {
     });
   }
 
-  console.log('✅ Seed completado con datos realistas y seguros');
+  console.log('✅ Finalizado seed...');
 }
 
 main()
